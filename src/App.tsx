@@ -11,7 +11,6 @@ function App() {
     console.log("testeeee")
     const { data } = await axios.get("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/product")
     setDataGroups(data)
-    //console.log(dataGroups[0].city)
   }
 
   return (
@@ -23,15 +22,36 @@ function App() {
       >
         GET  
       </button>
-      {dataGroups.length > 0 ? (
-        <div>
-          <p>{dataGroups[0].city}</p>
-          <p>{dataGroups[0].contractNumber}</p>
-          <p>{dataGroups[0].responsible}</p>
-        </div>
-      ) : (
-        <p>data not found</p>
-      )}
+      <div className='p-3 bg-slate-500'>
+        {dataGroups.map(group => (
+          <div className='flex flex-col bg-slate-300 w-100 gap-2 mb-3' key={group.groupId}>
+            <div className='flex justify-center'>
+              <p className='text-2xl'>{group.responsible}</p>
+              <p className='text-sm'>{group.contractNumber}</p>
+            </div>
+            <table>
+              <div className='flex gap-15'>
+                <div className='justify-items-start'>
+                  <p className='text-xs'>Estado</p>
+                  <p className='text-xl'>{group.state}</p>
+                </div>
+                <div className='justify-items-start'>
+                  <p className='text-xs'>Cidade</p>
+                  <p className='text-xl'>{group.city}</p>
+                </div>
+                <div className='justify-items-start'>
+                  <p className='text-xs'>Bairro</p>
+                  <p className='text-xl'>{group.district}</p>
+                </div>
+                <div className='justify-items-start'>
+                  <p className='text-xs'>Rua</p>
+                  <p className='text-xl'>{group.street}</p>
+                </div>
+              </div>
+            </table>
+          </div>
+        ))}
+      </div>
     </main>
   )
 }
