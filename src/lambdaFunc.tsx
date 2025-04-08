@@ -1,6 +1,8 @@
-const AWS = require('aws-sdk');
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-//const TABLE_NAME = 'groups';
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
+
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
 
 export const handler = async (event) => {
  
@@ -9,11 +11,11 @@ export const handler = async (event) => {
   switch (routeKey) {
     case 'GET /product':
       const params = { TableName: 'groups' };
-      const data = await dynamoDb.scan(params).promise();
+      const data = await docClient.send(new ScanCommand(params));
 
       return {
         statusCode: 200,
-        body: JSON.stringify('hello from lambda, get'),
+        body: JSON.stringify(data.Items),
         //data.Items
       }
     case 'POST /product':
