@@ -4,13 +4,14 @@ import { useState } from 'react'
 
 
 function App() {
-  const [dataGroups, setDataGroups] = useState('')
+  const [dataGroups, setDataGroups] = useState([])
 
   
   const handleGetGrups = async () => {
-    console.log("teste")
+    console.log("testeeee")
     const { data } = await axios.get("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/product")
     setDataGroups(data)
+    //console.log(dataGroups[0].city)
   }
 
   return (
@@ -22,7 +23,15 @@ function App() {
       >
         GET  
       </button>
-      <p>{dataGroups}</p>
+      {dataGroups.length > 0 ? (
+        <div>
+          <p>{dataGroups[0].city}</p>
+          <p>{dataGroups[0].contractNumber}</p>
+          <p>{dataGroups[0].responsible}</p>
+        </div>
+      ) : (
+        <p>data not found</p>
+      )}
     </main>
   )
 }
