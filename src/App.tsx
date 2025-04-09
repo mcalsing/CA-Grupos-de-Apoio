@@ -24,13 +24,27 @@ function App() {
       </button>
       <div className='p-3 bg-slate-500'>
         {dataGroups.map(group => (
-          <div className='flex flex-col bg-slate-300 w-100 gap-2 mb-3' key={group.groupId}>
+          <div className='flex flex-col bg-slate-300 w-150 gap-2 mb-3' key={group.groupId}>
             <div className='flex justify-center'>
-              <p className='text-2xl'>{group.responsible}</p>
+              <p className='text-xl'>{group.responsible}</p>
               <p className='text-sm'>{group.contractNumber}</p>
             </div>
-            <table>
-              <div className='flex gap-15'>
+            <table className=''>
+              <tr className='text-sm'>
+                <th>Estado</th>
+                <th>Cidade</th>
+                <th>Bairro</th>
+                <th>Rua</th>
+              </tr>
+              <tr className='text-xl'>
+                <td>{group.state}</td>
+                <td>{group.city}</td>
+                <td>{group.district}</td>
+                <td>{group.street}</td>
+              </tr>
+
+
+   {/*            <div className='flex gap-15'>
                 <div className='justify-items-start'>
                   <p className='text-xs'>Estado</p>
                   <p className='text-xl'>{group.state}</p>
@@ -47,7 +61,7 @@ function App() {
                   <p className='text-xs'>Rua</p>
                   <p className='text-xl'>{group.street}</p>
                 </div>
-              </div>
+              </div> */}
             </table>
           </div>
         ))}

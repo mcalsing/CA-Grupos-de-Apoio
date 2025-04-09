@@ -10,6 +10,10 @@
   font-family: Inter, sans-serif;
 }
 
+table, th, td {
+  border: 1px solid black;
+}
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
