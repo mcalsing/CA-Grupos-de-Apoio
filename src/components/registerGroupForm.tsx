@@ -1,22 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IAddress } from '../interfaces/IAddress'
+import { IAddressEN } from '../interfaces/IAddressEN'
 import axios from 'axios'
 import { IUserData } from '../interfaces/IUserData';
 
 function registerGroupForm() {
-  const [dataGroup, setDataGroup] = useState<IAddress | null>(null);
+  const [dataGroup, setDataGroup] = useState<IAddressEN | null>(null);
   const [cepInput, setCepInput] = useState('')
   const [userData, setUserData] = useState<IUserData>({
     responsible: '',
     contractNumber: ''
   });
+  //const [payload, setPayload] = useState('')
 
-  const getCep = async (cep:string): Promise<void> => {
-    const { data } = await axios.get<IAddress>(`https://viacep.com.br/ws/${cep}/json/`)
-    setDataGroup(data)
+  const getCep = async (cep:string) => {
+    try {
+      const { data } = await axios.get<IAddress>(`https://viacep.com.br/ws/${cep}/json/`)
+      const { estado: state, localidade: city, bairro: district, logradouro: street} = data
+      setDataGroup({state, city, district, street})
+
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error)
+    }
   }
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("entrei no handleCepChange")
     const cleanedValue = e.target.value.replace(/\D/g, '');
     setCepInput(cleanedValue);
     
@@ -32,6 +41,24 @@ function registerGroupForm() {
   }
 
   //console.log(userData) verificar pq userdata "muda" quando o cep é digitado
+
+  const handleCreateGroups = async (event) => {
+    event.preventDefault();
+    const payload = {
+      state: dataGroup?.state,
+      city: dataGroup?.city,
+      district: dataGroup?.district,
+      street: dataGroup?.street,
+      responsible: userData.responsible,
+      contractNumber: userData.contractNumber,
+      cep: cepInput
+    };
+    
+
+    await axios.post("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups", payload)
+    //setDataGroups(data)
+  }
+
 
   return (
     <form className="flex justify-center">
@@ -103,6 +130,12 @@ function registerGroupForm() {
             name="street"
           />
         </div>
+        <button
+          className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
+          onClick={handleCreateGroups}
+        >
+          POST  
+      </button>
       </div>
     </form>
   )

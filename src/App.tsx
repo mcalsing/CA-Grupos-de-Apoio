@@ -2,13 +2,14 @@ import axios from 'axios'
 import './App.css'
 import { useState } from 'react'
 import RegisterGroupForm from './components/registerGroupForm'
+import { IGroupData } from './interfaces/IGroupData'
 
 
 function App() {
-  const [dataGroups, setDataGroups] = useState([])
+  const [dataGroups, setDataGroups] = useState<IGroupData[]>([])
 
-  const handleGetGrups = async () => {
-    const { data } = await axios.get("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/product")
+  const handleGetGroups = async () => {
+    const { data } = await axios.get<IGroupData[]>("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups")
     setDataGroups(data)
   }
 
@@ -18,12 +19,12 @@ function App() {
       <RegisterGroupForm/>
       <button
         className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
-        onClick={handleGetGrups}
+        onClick={handleGetGroups}
       >
         GET  
       </button>
       <div className='p-3 bg-slate-500 flex gap-5 flex-wrap justify-center'>
-        {dataGroups && (
+        {dataGroups.length > 0 ? (
           dataGroups.map(group => (
             <div className='flex flex-col bg-slate-300 w-80 mb-3 rounded-sm p-3' key={group.groupId}>
               <div className='flex flex-col gap-4'>
@@ -53,6 +54,8 @@ function App() {
               </div>
             </div>
           ))
+        ) : (
+          <p>Nenhum grupo encontrado</p>
         )}
       </div>
     </main>
