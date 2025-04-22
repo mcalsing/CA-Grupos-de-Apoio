@@ -55,6 +55,7 @@ function registerGroupForm() {
     };
     
 
+    console.log(payload)
     await axios.post("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups", payload)
     //setDataGroups(data)
   }
@@ -99,7 +100,7 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={dataGroup?.estado}
+            value={dataGroup?.state}
             name="state"
           />
         </div>
@@ -108,7 +109,7 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={dataGroup?.localidade}
+            value={dataGroup?.city}
             name="city"
           />
         </div>
@@ -117,7 +118,7 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
             type="text"
-            value={dataGroup?.bairro}
+            value={dataGroup?.district}
             name="district"
           />
         </div>
@@ -126,7 +127,7 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={dataGroup?.logradouro}
+            value={dataGroup?.street}
             name="street"
           />
         </div>
