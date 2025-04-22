@@ -12,6 +12,7 @@ function App() {
     try {
       const { data } = await axios.get<IGroupData[]>("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups")
       setDataGroups(data)
+      console.log(data)
     } catch (err) {
       console.error("Algo deu errado!", err)
     }
@@ -31,39 +32,37 @@ function App() {
         {dataGroups.length > 0 ? (
           dataGroups.map(group => (
             <div className='flex flex-col bg-white w-120 mb-3 rounded-md shadow-lg' key={group.groupId}>
-              <div className='flex flex-col gap-4'>
+              <div className='flex flex-col'>
                 <div className='bg-blue-400 text-white p-3 rounded-t-md flex justify-between'>
-                  <p className='text-xl'>Centro de Apoio Renascer</p>
+                  <p className='text-2xl'>{group.groupName}</p>
                   <p className='text-xs'>Nº: {group.contractNumber}</p>
                 </div>
-                <div className='flex flex-col gap-4 px-5'>
+                <div className='flex flex-col gap-4 px-6 py-4'>
                   <div>
-                    <p>Local</p>
-                    <p>Rua {group.street}, {group.district} - {group.city}/{group.state} </p>
-
+                    <p className='text-xs'>Local:</p>
+                    <p className='text-xl'>Rua {group.street}, {group.district} - {group.city}/{group.state} </p>
                   </div>
                   <div>
                     <p className='text-xs'>Responsável:</p>
                     <div className='flex justify-between'>
                       <p className='text-xl'>{group.responsible}</p>
-                      <p>(47) 99999-9993</p>
+                      <p className='text-xl'>{group.phone}</p>
                     </div>
                   </div>
                   <div>
-                    <p className='text-xs'>Estado:</p>
-                    <p className='text-xl'>{group.state}</p>
+                    <p className='text-xs'>Reunições:</p>
+                    <div className='flex justify-between'>
+                      <p className='text-xl'>{group.dayOfTheWeek}, {group.time}</p>
+                      <p className='text-xl'>{group.frequency}</p>
+                    </div>
                   </div>
                   <div>
-                    <p className='text-xs'>Cidade:</p>
-                    <p className='text-xl'>{group.city}</p>
+                    <p className='text-xs'>E-mail:</p>
+                    <p className='text-xl'>{group.email}</p>
                   </div>
                   <div>
-                    <p className='text-xs'>Bairro:</p>
-                    <p className='text-xl'>{group.district}</p>
-                  </div>
-                  <div>
-                    <p className='text-xs'>Rua:</p>
-                    <p className='text-xl'>{group.street}</p>
+                    <p className='text-xs'>Apoio:</p>
+                    <p className='text-xl'>{group.support}</p>
                   </div>
                 </div>
               </div>

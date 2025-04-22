@@ -6,4 +6,11 @@ export interface IGroupData {
   city: string;
   district: string;
   street: string;
+  dayOfTheWeek: string;
+  time: string;
+  email: string;
+  support: string;
+  phone: string;
+  groupName: string;
+  frequency: string;
 }
