@@ -1,23 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IAddress } from '../interfaces/IAddress'
 import { IAddressEN } from '../interfaces/IAddressEN'
 import axios from 'axios'
 import { IUserData } from '../interfaces/IUserData';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { FaSpinner } from "react-icons/fa";
+
+const initialGroupData: IUserData = {
+  responsible: '',
+  contractNumber: '',
+  phone: '',
+  email: '',
+  support: '',
+  groupName: '',
+  dayOfTheWeek: [],
+  frequency: '',
+  time: ''
+};
+
+const initialGroupAddress: IAddressEN = {
+  state: '',
+  city: '',
+  district: '',
+  street: '',
+}
 
 function registerGroupForm() {
-  const [groupAddress, setGroupAddress] = useState<IAddressEN | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [groupAddress, setGroupAddress] = useState<IAddressEN | null>(initialGroupAddress);
   const [cepInput, setCepInput] = useState('')
-  const [groupData, setGroupData] = useState<IUserData>({
-    responsible: '',
-    contractNumber: '',
-    phone: '',
-    email: '',
-    support: '',
-    groupName: '',
-    dayOfTheWeek: '',
-    frequency: '',
-    time: ''
-  });
+  const [groupData, setGroupData] = useState<IUserData>(initialGroupData);
   //const [payload, setPayload] = useState('')
 
   const getCep = async (cep:string) => {
@@ -47,10 +59,23 @@ function registerGroupForm() {
     setGroupData((prev) => ({ ...prev, [name]: value }));
   }
 
+  const handleDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+  
+    setGroupData((prevData) => {
+      const updatedDays = checked
+        ? [...prevData.dayOfTheWeek, value]
+        : prevData.dayOfTheWeek.filter((day) => day !== value);
+  
+      return { ...prevData, dayOfTheWeek: updatedDays };
+    });
+  };
+
   //console.log(groupData) verificar pq userdata "muda" quando o cep é digitado
 
   const handleCreateSupportGroup = async (event) => {
     event.preventDefault();
+    setIsLoading(true)
     const payload = {
       cep: cepInput,
       state: groupAddress?.state,
@@ -66,18 +91,39 @@ function registerGroupForm() {
       dayOfTheWeek: groupData.dayOfTheWeek,
       frequency: groupData.frequency,
       time: groupData.time,
-      groupId: "8"
+      groupId: Math.random().toString(36).slice(-7)
     };
     
+    try {
+      console.log(payload)
+      await axios.post("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups", payload)
 
-    console.log(payload)
-    await axios.post("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups", payload)
+      toast.success('Grupo de Apoio Cadastrado!', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      })
+      setGroupAddress(initialGroupAddress)
+      setGroupData(initialGroupData)
+      setCepInput('')
+      setIsLoading(false)
+    } catch (error) {
+      console.error("Erro durante o registro:", error);
+      setIsLoading(false)
+    }
     //setDataGroups(data)
   }
 
 
   return (
     <form className="flex justify-center">
+      <ToastContainer />
       <div className="mt-16 flex gap-4 flex-wrap md:w-[536px] w-[416px]">
         <div className="flex flex-col md:w-[259px] w-[200px]">
           <label className="font-medium text-sm text-b600">Nome do Grupo</label>
@@ -146,9 +192,9 @@ function registerGroupForm() {
               className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
               id="day1"
               type="checkbox"
-              value="Segunda"
+              value="Segunda-feira"
               name="dayOfTheWeek"
-              onChange={handleGroupDataChange}
+              onChange={handleDayChange}
             />
             <label htmlFor="day1">Segunda</label>
           </div>
@@ -157,9 +203,9 @@ function registerGroupForm() {
               className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
               id="day2"
               type="checkbox"
-              value="Terça"
+              value="Terça-feira"
               name="dayOfTheWeek"
-              onChange={handleGroupDataChange}
+              onChange={handleDayChange}
             />
             <label htmlFor="day2">Terça</label>
           </div>
@@ -168,9 +214,9 @@ function registerGroupForm() {
               className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
               id="day3"
               type="checkbox"
-              value="Quarta"
+              value="Quarta-feira"
               name="dayOfTheWeek"
-              onChange={handleGroupDataChange}
+              onChange={handleDayChange}
             />
             <label htmlFor="day3">Quarta</label>
           </div>
@@ -179,9 +225,9 @@ function registerGroupForm() {
               className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
               id="day4"
               type="checkbox"
-              value="Quinta"
+              value="Quinta-feira"
               name="dayOfTheWeek"
-              onChange={handleGroupDataChange}
+              onChange={handleDayChange}
             />
             <label htmlFor="day4">Quinta</label>
           </div>
@@ -190,9 +236,9 @@ function registerGroupForm() {
               className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
               id="day5"
               type="checkbox"
-              value="Sexta"
+              value="Sexta-feira"
               name="dayOfTheWeek"
-              onChange={handleGroupDataChange}
+              onChange={handleDayChange}
             />
             <label htmlFor="day5">Sexta</label>
           </div>          
@@ -203,7 +249,7 @@ function registerGroupForm() {
               type="checkbox"
               value="Sábado"
               name="dayOfTheWeek"
-              onChange={handleGroupDataChange}
+              onChange={handleDayChange}
             />
             <label htmlFor="day6">Sábado</label>
           </div>
@@ -280,10 +326,14 @@ function registerGroupForm() {
           />
         </div>
         <button
-          className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
+          type="submit"
+          className='bg-blue-500 cursor-pointer px-6 py-1 rounded-sm mt-3 text-white flex items-center gap-3'
           onClick={handleCreateSupportGroup}
         >
           Criar Grupo  
+          {isLoading && (
+            <FaSpinner className="animate-spin" />
+          )}
       </button>
       </div>
     </form>

@@ -52,7 +52,7 @@ function App() {
                   <div>
                     <p className='text-xs'>Reunições:</p>
                     <div className='flex justify-between'>
-                      <p className='text-xl'>{group.dayOfTheWeek}, {group.time}</p>
+                      <p className='text-xl'>{group.dayOfTheWeek[0]} e {group?.dayOfTheWeek[1]} às {group.time}</p>
                       <p className='text-xl'>{group.frequency}</p>
                     </div>
                   </div>

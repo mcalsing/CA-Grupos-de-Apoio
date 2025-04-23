@@ -5,7 +5,7 @@ export interface IUserData {
   email: string;
   responsible: string;
   phone: string;
-  dayOfTheWeek: string;
+  dayOfTheWeek: [];
   frequency: string;
   time: string;
 }
