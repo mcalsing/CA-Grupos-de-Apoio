@@ -1,7 +1,11 @@
 export interface IUserData {
-  responsible: string;
+  groupName: string;
   contractNumber: string;
-  phone: string;
-  email: string;
   support: string;
+  email: string;
+  responsible: string;
+  phone: string;
+  dayOfTheWeek: string;
+  frequency: string;
+  time: string;
 }

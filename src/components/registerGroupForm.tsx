@@ -5,14 +5,18 @@ import axios from 'axios'
 import { IUserData } from '../interfaces/IUserData';
 
 function registerGroupForm() {
-  const [dataGroup, setDataGroup] = useState<IAddressEN | null>(null);
+  const [groupAddress, setGroupAddress] = useState<IAddressEN | null>(null);
   const [cepInput, setCepInput] = useState('')
-  const [userData, setUserData] = useState<IUserData>({
+  const [groupData, setGroupData] = useState<IUserData>({
     responsible: '',
     contractNumber: '',
     phone: '',
     email: '',
-    support: ''
+    support: '',
+    groupName: '',
+    dayOfTheWeek: '',
+    frequency: '',
+    time: ''
   });
   //const [payload, setPayload] = useState('')
 
@@ -20,7 +24,7 @@ function registerGroupForm() {
     try {
       const { data } = await axios.get<IAddress>(`https://viacep.com.br/ws/${cep}/json/`)
       const { estado: state, localidade: city, bairro: district, logradouro: street} = data
-      setDataGroup({state, city, district, street})
+      setGroupAddress({state, city, district, street})
 
     } catch (error) {
       console.error("Erro ao buscar CEP:", error)
@@ -37,24 +41,32 @@ function registerGroupForm() {
     }
   };
 
-  const handleUserDataChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
+  const handleGroupDataChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
     const { name, value } = e.target;
 
-    setUserData((prev) => ({ ...prev, [name]: value }));
+    setGroupData((prev) => ({ ...prev, [name]: value }));
   }
 
-  //console.log(userData) verificar pq userdata "muda" quando o cep é digitado
+  //console.log(groupData) verificar pq userdata "muda" quando o cep é digitado
 
-  const handleCreateGroups = async (event) => {
+  const handleCreateSupportGroup = async (event) => {
     event.preventDefault();
     const payload = {
-      state: dataGroup?.state,
-      city: dataGroup?.city,
-      district: dataGroup?.district,
-      street: dataGroup?.street,
-      responsible: userData.responsible,
-      contractNumber: userData.contractNumber,
-      cep: cepInput
+      cep: cepInput,
+      state: groupAddress?.state,
+      city: groupAddress?.city,
+      district: groupAddress?.district,
+      street: groupAddress?.street,
+      groupName: groupData.groupName,
+      contractNumber: groupData.contractNumber,
+      support: groupData.support,
+      email: groupData.email,
+      responsible: groupData.responsible,
+      phone: groupData.phone,
+      dayOfTheWeek: groupData.dayOfTheWeek,
+      frequency: groupData.frequency,
+      time: groupData.time,
+      groupId: "8"
     };
     
 
@@ -72,9 +84,9 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={userData.responsible}
-            name="responsible"
-            onChange={handleUserDataChange}
+            value={groupData.groupName}
+            name="groupName"
+            onChange={handleGroupDataChange}
           />
         </div>
         <div className="flex flex-col md:w-[259px] w-[200px]">
@@ -82,9 +94,9 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={userData.contractNumber}
+            value={groupData.contractNumber}
             name="contractNumber"
-            onChange={handleUserDataChange}
+            onChange={handleGroupDataChange}
           />
         </div>
         <div className="flex flex-col md:w-[259px] w-[200px]">
@@ -92,9 +104,9 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={userData.responsible}
-            name="responsible"
-            onChange={handleUserDataChange}
+            value={groupData.support}
+            name="support"
+            onChange={handleGroupDataChange}
           />
         </div>
         <div className="flex flex-col md:w-[259px] w-[200px]">
@@ -102,9 +114,9 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={userData.responsible}
-            name="responsible"
-            onChange={handleUserDataChange}
+            value={groupData.email}
+            name="email"
+            onChange={handleGroupDataChange}
           />
         </div>
         <div className="flex flex-col md:w-[259px] w-[200px]">
@@ -112,9 +124,9 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={userData.responsible}
+            value={groupData.responsible}
             name="responsible"
-            onChange={handleUserDataChange}
+            onChange={handleGroupDataChange}
           />
         </div>
         <div className="flex flex-col md:w-[259px] w-[200px]">
@@ -122,9 +134,9 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={userData.contractNumber}
-            name="contractNumber"
-            onChange={handleUserDataChange}
+            value={groupData.phone}
+            name="phone"
+            onChange={handleGroupDataChange}
           />
         </div>
         <div className="md:w-[259px] w-[200px]">
@@ -135,10 +147,10 @@ function registerGroupForm() {
               id="day1"
               type="checkbox"
               value="Segunda"
-              name="contractNumber"
-              /* onChange={handleUserDataChange} */
+              name="dayOfTheWeek"
+              onChange={handleGroupDataChange}
             />
-            <label for="day1">Segunda</label>
+            <label htmlFor="day1">Segunda</label>
           </div>
           <div className='flex gap-2'>
             <input 
@@ -146,10 +158,10 @@ function registerGroupForm() {
               id="day2"
               type="checkbox"
               value="Terça"
-              name="contractNumber"
-              /* onChange={handleUserDataChange} */
+              name="dayOfTheWeek"
+              onChange={handleGroupDataChange}
             />
-            <label for="day2">Terça</label>
+            <label htmlFor="day2">Terça</label>
           </div>
           <div className='flex gap-2'>
             <input 
@@ -157,10 +169,10 @@ function registerGroupForm() {
               id="day3"
               type="checkbox"
               value="Quarta"
-              name="contractNumber"
-              /* onChange={handleUserDataChange} */
+              name="dayOfTheWeek"
+              onChange={handleGroupDataChange}
             />
-            <label for="day3">Quarta</label>
+            <label htmlFor="day3">Quarta</label>
           </div>
           <div className='flex gap-2'>
             <input 
@@ -168,10 +180,10 @@ function registerGroupForm() {
               id="day4"
               type="checkbox"
               value="Quinta"
-              name="contractNumber"
-              /* onChange={handleUserDataChange} */
+              name="dayOfTheWeek"
+              onChange={handleGroupDataChange}
             />
-            <label for="day4">Quinta</label>
+            <label htmlFor="day4">Quinta</label>
           </div>
           <div className='flex gap-2'>
             <input 
@@ -179,10 +191,10 @@ function registerGroupForm() {
               id="day5"
               type="checkbox"
               value="Sexta"
-              name="contractNumber"
-              /* onChange={handleUserDataChange} */
+              name="dayOfTheWeek"
+              onChange={handleGroupDataChange}
             />
-            <label for="day5">Sexta</label>
+            <label htmlFor="day5">Sexta</label>
           </div>          
           <div className='flex gap-2'>
             <input 
@@ -190,19 +202,35 @@ function registerGroupForm() {
               id="day6"
               type="checkbox"
               value="Sábado"
-              name="contractNumber"
-              /* onChange={handleUserDataChange} */
+              name="dayOfTheWeek"
+              onChange={handleGroupDataChange}
             />
-            <label for="day6">Sábado</label>
+            <label htmlFor="day6">Sábado</label>
           </div>
         </div>
-        <div className="flex flex-col md:w-[259px] w-[200px]">
-          <label className="font-medium text-sm text-b600">Frequência</label>
-          <select name="cars" className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]">
-            <option value="semanal">Semanal</option>
-            <option value="quinzenal">Quinzenal</option>
-            <option value="mensal">Mensal</option>
-          </select>
+        <div>
+          <div className="flex flex-col md:w-[259px] w-[200px]">
+            <label className="font-medium text-sm text-b600">Frequência</label>
+            <select 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
+              name="frequency"
+              onChange={handleGroupDataChange} 
+            >
+              <option value="Semanal">Semanal</option>
+              <option value="Quinzenal">Quinzenal</option>
+              <option value="Mensal">Mensal</option>
+            </select>
+          </div>
+          <div className="flex flex-col md:w-[259px] w-[200px]">
+            <label className="font-medium text-sm text-b600 mt-4">Horário de Início das Reuniões</label>
+            <input 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
+              type="text"
+              value={groupData.time}
+              onChange={handleGroupDataChange}
+              name="time"
+            />
+        </div>
         </div>
         <div className="flex flex-col md:w-[259px] w-[200px]">
           <label className="font-medium text-sm text-b600">CEP</label>
@@ -220,7 +248,7 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={dataGroup?.state}
+            value={groupAddress?.state}
             name="state"
           />
         </div>
@@ -229,7 +257,7 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={dataGroup?.city}
+            value={groupAddress?.city}
             name="city"
           />
         </div>
@@ -238,7 +266,7 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
             type="text"
-            value={dataGroup?.district}
+            value={groupAddress?.district}
             name="district"
           />
         </div>
@@ -247,15 +275,15 @@ function registerGroupForm() {
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
-            value={dataGroup?.street}
+            value={groupAddress?.street}
             name="street"
           />
         </div>
         <button
           className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
-          onClick={handleCreateGroups}
+          onClick={handleCreateSupportGroup}
         >
-          POST  
+          Criar Grupo  
       </button>
       </div>
     </form>

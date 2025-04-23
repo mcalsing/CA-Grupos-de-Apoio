@@ -1,37 +1,53 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, ScanCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 export const handler = async (event) => {
- 
   const routeKey = event.routeKey;
+
+/*   const headers = {
+    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Headers": "content-type",
+    "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
+  }; */
 
   switch (routeKey) {
     case 'GET /groups':
-      const params = { TableName: 'groups' };
-      const data = await docClient.send(new ScanCommand(params));
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify(data.Items),
+      try {
+          const params = { TableName: 'groups' };
+          const data = await docClient.send(new ScanCommand(params));
+    
+          return {
+            statusCode: 200,
+            body: JSON.stringify(data.Items),
+          };
+      } catch (error) {
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ message: 'Error fetching data', error: error.message })
+        };
       }
     case 'POST /groups':
-      const userData = JSON.parse(event.body);
-      const params = {
-        TableName: 'groups',
-        Item: {
-          userId: Date.now().toString(),
-          ...userData
-        }
-      };
-            
-      await dynamoDb.put(params).promise();
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'User created successfully' })
-      };
+      try {
+        const groupData = JSON.parse(event.body);
+        const postParams = {
+          TableName: 'groups',
+          Item: {...groupData }
+        };
+
+        await docClient.send(new PutCommand(postParams));
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ message: 'User created successfully' })
+        };
+      } catch (error) {
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ message: 'Error creating user', error: error.message })
+        };
+      }
     default:
       return {
         statusCode: 404,
