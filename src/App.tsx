@@ -69,7 +69,7 @@ function App() {
             </div>
           ))
         ) : (
-          <p>Nenhum grupo encontrado</p>
+          <p className='text-2xl'>Nenhum grupo encontrado</p>
         )}
       </div>
     </main>

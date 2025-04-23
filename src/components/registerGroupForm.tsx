@@ -9,7 +9,10 @@ function registerGroupForm() {
   const [cepInput, setCepInput] = useState('')
   const [userData, setUserData] = useState<IUserData>({
     responsible: '',
-    contractNumber: ''
+    contractNumber: '',
+    phone: '',
+    email: '',
+    support: ''
   });
   //const [payload, setPayload] = useState('')
 
@@ -65,7 +68,7 @@ function registerGroupForm() {
     <form className="flex justify-center">
       <div className="mt-16 flex gap-4 flex-wrap md:w-[536px] w-[416px]">
         <div className="flex flex-col md:w-[259px] w-[200px]">
-          <label className="font-medium text-sm text-b600">Responsável</label>
+          <label className="font-medium text-sm text-b600">Nome do Grupo</label>
           <input 
             className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
             type="text"
@@ -83,6 +86,123 @@ function registerGroupForm() {
             name="contractNumber"
             onChange={handleUserDataChange}
           />
+        </div>
+        <div className="flex flex-col md:w-[259px] w-[200px]">
+          <label className="font-medium text-sm text-b600">Apoio</label>
+          <input 
+            className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
+            type="text"
+            value={userData.responsible}
+            name="responsible"
+            onChange={handleUserDataChange}
+          />
+        </div>
+        <div className="flex flex-col md:w-[259px] w-[200px]">
+          <label className="font-medium text-sm text-b600">E-mail</label>
+          <input 
+            className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
+            type="text"
+            value={userData.responsible}
+            name="responsible"
+            onChange={handleUserDataChange}
+          />
+        </div>
+        <div className="flex flex-col md:w-[259px] w-[200px]">
+          <label className="font-medium text-sm text-b600">Responsável</label>
+          <input 
+            className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
+            type="text"
+            value={userData.responsible}
+            name="responsible"
+            onChange={handleUserDataChange}
+          />
+        </div>
+        <div className="flex flex-col md:w-[259px] w-[200px]">
+          <label className="font-medium text-sm text-b600">Telefone</label>
+          <input 
+            className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]" 
+            type="text"
+            value={userData.contractNumber}
+            name="contractNumber"
+            onChange={handleUserDataChange}
+          />
+        </div>
+        <div className="md:w-[259px] w-[200px]">
+          {/* <label className="font-medium text-sm text-b600">Dias da Semana</label> */}
+          <div className='flex gap-2'>
+            <input 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
+              id="day1"
+              type="checkbox"
+              value="Segunda"
+              name="contractNumber"
+              /* onChange={handleUserDataChange} */
+            />
+            <label for="day1">Segunda</label>
+          </div>
+          <div className='flex gap-2'>
+            <input 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
+              id="day2"
+              type="checkbox"
+              value="Terça"
+              name="contractNumber"
+              /* onChange={handleUserDataChange} */
+            />
+            <label for="day2">Terça</label>
+          </div>
+          <div className='flex gap-2'>
+            <input 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
+              id="day3"
+              type="checkbox"
+              value="Quarta"
+              name="contractNumber"
+              /* onChange={handleUserDataChange} */
+            />
+            <label for="day3">Quarta</label>
+          </div>
+          <div className='flex gap-2'>
+            <input 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
+              id="day4"
+              type="checkbox"
+              value="Quinta"
+              name="contractNumber"
+              /* onChange={handleUserDataChange} */
+            />
+            <label for="day4">Quinta</label>
+          </div>
+          <div className='flex gap-2'>
+            <input 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
+              id="day5"
+              type="checkbox"
+              value="Sexta"
+              name="contractNumber"
+              /* onChange={handleUserDataChange} */
+            />
+            <label for="day5">Sexta</label>
+          </div>          
+          <div className='flex gap-2'>
+            <input 
+              className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]"
+              id="day6"
+              type="checkbox"
+              value="Sábado"
+              name="contractNumber"
+              /* onChange={handleUserDataChange} */
+            />
+            <label for="day6">Sábado</label>
+          </div>
+        </div>
+        <div className="flex flex-col md:w-[259px] w-[200px]">
+          <label className="font-medium text-sm text-b600">Frequência</label>
+          <select name="cars" className="py-[10px] px-[15px] border-1 border-b100 rounded-[4px]">
+            <option value="semanal">Semanal</option>
+            <option value="quinzenal">Quinzenal</option>
+            <option value="mensal">Mensal</option>
+          </select>
         </div>
         <div className="flex flex-col md:w-[259px] w-[200px]">
           <label className="font-medium text-sm text-b600">CEP</label>
