@@ -3,6 +3,7 @@ export interface IGroupData {
   responsible: string;
   contractNumber: string;
   state: string;
+  stateUF: string,
   city: string;
   district: string;
   street: string;

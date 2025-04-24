@@ -35,8 +35,9 @@ function registerGroupForm() {
   const getCep = async (cep:string) => {
     try {
       const { data } = await axios.get<IAddress>(`https://viacep.com.br/ws/${cep}/json/`)
-      const { estado: state, localidade: city, bairro: district, logradouro: street} = data
-      setGroupAddress({state, city, district, street})
+      console.log(data)
+      const { estado: state, uf: stateUF, localidade: city, bairro: district, logradouro: street} = data
+      setGroupAddress({state, stateUF, city, district, street})
 
     } catch (error) {
       console.error("Erro ao buscar CEP:", error)
@@ -79,6 +80,7 @@ function registerGroupForm() {
     const payload = {
       cep: cepInput,
       state: groupAddress?.state,
+      stateUF: groupAddress?.stateUF,
       city: groupAddress?.city,
       district: groupAddress?.district,
       street: groupAddress?.street,
