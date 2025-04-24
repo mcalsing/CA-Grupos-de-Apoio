@@ -3,6 +3,7 @@ import './App.css'
 import { useEffect, useState } from 'react'
 import RegisterGroupForm from './components/registerGroupForm'
 import { IGroupData } from './interfaces/IGroupData'
+import { FaRegTrashAlt } from "react-icons/fa";
 
 
 function App() {
@@ -15,7 +16,6 @@ function App() {
       const { data } = await axios.get<IGroupData[]>("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups")
       setDataGroups(data)
       setFilteredDataGroups(data)
-      console.log(data)
     } catch (err) {
       console.error("Algo deu errado!", err)
     }
@@ -24,14 +24,31 @@ function App() {
   const handleFilterState = (e) => {
     const { value } = e.target;
 
-    console.log(value)
     if (value === "Todos") {
       setFilteredDataGroups(dataGroups)
       return
     }
 
     setFilteredDataGroups(dataGroups.filter(group => group.state.includes(value)))
-    console.log(filteredDataGroups)
+  }
+
+  const handleDeleteGroup = async (currentId) => {
+    console.log(currentId)
+    try {
+      if (window.confirm('Tem certeza que deseja deletar o Grupo de Apoio?')) {
+        console.log('Action confirmed!');
+        console.log(dataGroups)
+  
+        const response = await axios.delete(`https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups/${currentId}`)
+        console.log(response)
+        setFilteredDataGroups(dataGroups.filter(group => group.groupId !== currentId ))
+      } else {
+        console.log('Action cancelled.');
+      }
+
+    } catch (error) {
+      console.error("Algo deu errado", error)
+    }
   }
 
   useEffect(() => {
@@ -122,6 +139,13 @@ function App() {
                     <div>
                       <p className='text-xs'>Apoio:</p>
                       <p className='text-xl'>{group.support}</p>
+                    </div>
+                    <div className='flex items-center'>
+                      <button className='bg-blue-400 px-6 py-2 rounded-sm text-white cursor-pointer'>Editar Grupo</button>
+                      <FaRegTrashAlt 
+                        className='cursor-pointer text-lg flex ml-auto text-red-600'
+                        onClick={() => handleDeleteGroup(group.groupId)}
+                      />
                     </div>
                   </div>
                 </div>

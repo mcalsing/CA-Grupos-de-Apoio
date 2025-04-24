@@ -69,6 +69,12 @@ function registerGroupForm() {
         : prevData.dayOfTheWeek.filter((day) => day !== value);
   
       return { ...prevData, dayOfTheWeek: updatedDays };
+
+      //handle change para checkbox, testar depois
+      /* const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, checked } = e.target;
+        setCheckedCategories((prev) => ({ ...prev, [name]: checked  }))
+      }*/
     });
   };
 
