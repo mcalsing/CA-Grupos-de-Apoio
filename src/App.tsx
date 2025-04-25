@@ -66,23 +66,17 @@ function App() {
 
   return (
     <main className='bg-slate-50 flex flex-col items-center'>
-      <section className='max-w-[1440px]'>      
-        <h1>Grupos de apoio</h1>
+      <section className='max-w-[1440px] flex flex-col items-center'>      
         <RegisterGroupForm />
-{/*         <button
-          className='bg-blue-600 cursor-pointer px-8 py-1 rounded-sm mt-3 text-white'
-          onClick={handleGetGroups}
-        >
-          GET  
-        </button> */}
+        <h1 className='text-center text-2xl text-slate-700 mb-3 mt-10'>Encontre um Grupo de Apoio!</h1>
         <div className='flex text-white justify-center'>
           {uniqueStates.map((state, index) => {
             const isSelected = state === selectedState;
             return (
               <div key={index}>
                 <button
-                  className={`cursor-pointer px-6 py-2 mt-3 font-semibold text-xl
-                    ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-200 text-blue-600'}
+                  className={`cursor-pointer px-6 py-2 mt-3 font-semibold text-xl hover:bg-blue-400 hover:text-white
+                    ${isSelected ? 'bg-blue-500 text-white' : 'bg-slate-100 text-blue-600'}
                   `}
                   onClick={() => handleFilterState(state)}
                   value={state}
@@ -106,7 +100,7 @@ function App() {
                   <div className='flex flex-col gap-4 px-6 py-4'>
                     <div>
                       <p className='text-xs'>Local:</p>
-                      <p className='text-xl'>Rua {group.street}, {group.district} - {group.city}/{group.stateUF} </p>
+                      <p className='text-xl'>{group.street}, {group.district} - {group.city}/{group.stateUF} </p>
                     </div>
                     <div>
                       <p className='text-xs'>Responsável:</p>
