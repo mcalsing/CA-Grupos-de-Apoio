@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import RegisterGroupForm from './components/registerGroupForm'
 import { IGroupData } from './interfaces/IGroupData'
 import { FaRegTrashAlt } from "react-icons/fa";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [numberOfGroups, setNumberOfGroups] = useState(0)
   const [uniqueStates, setUniqueStates] = useState([])
   const [selectedState, setSelectedState] = useState(null)
+  const [isLoadingGroups, setIsLoadingGroups] = useState(false)
 
   const handleGetGroups = async () => {
     try {
@@ -61,7 +63,11 @@ function App() {
   }, [filteredDataGroups])
 
   useEffect(() => {
+    setIsLoadingGroups(true)
     handleGetGroups()
+    setTimeout(() => {
+      setIsLoadingGroups(false);
+    }, 1500);
   }, [])
 
   return (
@@ -89,54 +95,61 @@ function App() {
         </div>
         <p className='text-center mt-2 mb-4 text-slate-600'>{numberOfGroups} Grupo(s) Encontrado(s)</p>
         <div className='p-3 flex gap-15 flex-wrap justify-center'>
-          {filteredDataGroups.length > 0 ? (
-            filteredDataGroups.map(group => (
-              <div className='flex flex-col bg-white w-120 rounded-md shadow-lg' key={group.groupId}>
-                <div className='flex flex-col'>
-                  <div className='bg-blue-400 text-white p-3 rounded-t-md flex justify-between'>
-                    <p className='text-2xl'>{group.groupName}</p>
-                    <p className='text-xs'>Nº: {group.contractNumber}</p>
-                  </div>
-                  <div className='flex flex-col gap-4 px-6 py-4'>
-                    <div>
-                      <p className='text-xs'>Local:</p>
-                      <p className='text-xl'>{group.street}, {group.district} - {group.city}/{group.stateUF} </p>
+          {isLoadingGroups ? (
+            <div className='flex flex-col items-center gap-5 text-slate-700'>
+              <p className='text-2xl'>Carregando Grupos</p>
+              <AiOutlineLoading3Quarters className='animate-spin text-3xl' />
+            </div>
+          ) : (
+            filteredDataGroups.length > 0 ? (
+              filteredDataGroups.map(group => (
+                <div className='flex flex-col bg-white w-120 rounded-md shadow-lg' key={group.groupId}>
+                  <div className='flex flex-col'>
+                    <div className='bg-blue-400 text-white p-3 rounded-t-md flex justify-between'>
+                      <p className='text-2xl'>{group.groupName}</p>
+                      <p className='text-xs'>Nº: {group.contractNumber}</p>
                     </div>
-                    <div>
-                      <p className='text-xs'>Responsável:</p>
-                      <div className='flex justify-between'>
-                        <p className='text-xl'>{group.responsible}</p>
-                        <p className='text-xl'>{group.phone}</p>
+                    <div className='flex flex-col gap-4 px-6 py-4'>
+                      <div>
+                        <p className='text-xs'>Local:</p>
+                        <p className='text-xl'>{group.street}, {group.district} - {group.city}/{group.stateUF} </p>
                       </div>
-                    </div>
-                    <div>
-                      <p className='text-xs'>Reunições:</p>
-                      <div className='flex justify-between'>
-                        <p className='text-xl'>{group.dayOfTheWeek[0]} e {group?.dayOfTheWeek[1]} às {group.time}</p>
-                        <p className='text-xl'>{group.frequency}</p>
+                      <div>
+                        <p className='text-xs'>Responsável:</p>
+                        <div className='flex justify-between'>
+                          <p className='text-xl'>{group.responsible}</p>
+                          <p className='text-xl'>{group.phone}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <p className='text-xs'>E-mail:</p>
-                      <p className='text-xl'>{group.email}</p>
-                    </div>
-                    <div>
-                      <p className='text-xs'>Apoio:</p>
-                      <p className='text-xl'>{group.support}</p>
-                    </div>
-                    <div className='flex items-center'>
-                      <button className='bg-blue-400 px-6 py-2 rounded-sm text-white cursor-pointer'>Editar Grupo</button>
-                      <FaRegTrashAlt 
-                        className='cursor-pointer text-lg flex ml-auto text-red-600'
-                        onClick={() => handleDeleteGroup(group.groupId)}
-                      />
+                      <div>
+                        <p className='text-xs'>Reunições:</p>
+                        <div className='flex justify-between'>
+                          <p className='text-xl'>{group.dayOfTheWeek[0]} e {group?.dayOfTheWeek[1]} às {group.time}</p>
+                          <p className='text-xl'>{group.frequency}</p>
+                        </div>
+                      </div>
+                      <div>
+                        <p className='text-xs'>E-mail:</p>
+                        <p className='text-xl'>{group.email}</p>
+                      </div>
+                      <div>
+                        <p className='text-xs'>Apoio:</p>
+                        <p className='text-xl'>{group.support}</p>
+                      </div>
+                      <div className='flex items-center'>
+                        <button className='bg-blue-400 px-6 py-2 rounded-sm text-white cursor-pointer'>Editar Grupo</button>
+                        <FaRegTrashAlt 
+                          className='cursor-pointer text-lg flex ml-auto text-red-600'
+                          onClick={() => handleDeleteGroup(group.groupId)}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p className='text-2xl'>Nenhum grupo encontrado</p>
+              ))
+            ) : (
+              <p className='text-2xl'>Nenhum grupo encontrado</p>
+            )
           )}
         </div>
       </section>
