@@ -10,6 +10,8 @@ function App() {
   const [dataGroups, setDataGroups] = useState<IGroupData[]>([])
   const [filteredDataGroups, setFilteredDataGroups] = useState<IGroupData[]>([])
   const [numberOfGroups, setNumberOfGroups] = useState(0)
+  const [uniqueStates, setUniqueStates] = useState([])
+  const [selectedState, setSelectedState] = useState(null)
 
   const handleGetGroups = async () => {
     try {
@@ -21,15 +23,13 @@ function App() {
     }
   }
 
-  const handleFilterState = (e) => {
-    const { value } = e.target;
-
-    if (value === "Todos") {
+  const handleFilterState = (state) => {
+    if (state === "Todos") {
       setFilteredDataGroups(dataGroups)
-      return
+    } else {
+      setFilteredDataGroups(dataGroups.filter(group => group.state.includes(state)))
     }
-
-    setFilteredDataGroups(dataGroups.filter(group => group.state.includes(value)))
+    setSelectedState(state)
   }
 
   const handleDeleteGroup = async (currentId) => {
@@ -51,59 +51,45 @@ function App() {
     }
   }
 
+  const getUniqueStates = () => {
+    setUniqueStates([...new Set(dataGroups.map(group => group.state)), 'Todos'])
+  }
+
   useEffect(() => {
     setNumberOfGroups(filteredDataGroups.length)
+    getUniqueStates()
   }, [filteredDataGroups])
 
   return (
     <main className='bg-slate-50 flex flex-col items-center'>
       <section className='max-w-[1440px]'>      
         <h1>Grupos de apoio</h1>
-        <RegisterGroupForm/>
+        <RegisterGroupForm />
         <button
-          className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
+          className='bg-blue-600 cursor-pointer px-8 py-1 rounded-sm mt-3 text-white'
           onClick={handleGetGroups}
         >
           GET  
         </button>
-        <div className='flex gap-5 text-white justify-center'>
-          <button
-            className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
-            onClick={handleFilterState}
-            value="Paraná"
-          >
-            Paraná  
-          </button>
-          <button
-            className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
-            onClick={handleFilterState}
-            value="Rio Grande do Sul"
-          >
-            Rio Grande do Sul  
-          </button>
-          <button
-            className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
-            onClick={handleFilterState}
-            value="Santa Catarina"
-          >
-          Santa Catarina  
-          </button>
-          <button
-            className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
-            onClick={handleFilterState}
-            value="São Paulo"
-          >
-            São Paulo  
-          </button>
-          <button
-            className='bg-blue-500 cursor-pointer px-8 py-1 rounded-sm mt-3'
-            onClick={handleFilterState}
-            value="Todos"
-          >
-            Todos  
-          </button>
-        <p className='text-black'>{numberOfGroups} Grupos Encontrados</p>
+        <div className='flex text-white justify-center'>
+          {uniqueStates.map((state, index) => {
+            const isSelected = state === selectedState;
+            return (
+              <div key={index}>
+                <button
+                  className={`cursor-pointer px-6 py-2 mt-3 font-semibold text-xl
+                    ${isSelected ? 'bg-blue-600 text-white' : 'bg-slate-200 text-blue-600'}
+                  `}
+                  onClick={() => handleFilterState(state)}
+                  value={state}
+                >
+                  {state}
+                </button>
+              </div>
+            );
+          })}
         </div>
+        <p className='text-center mt-2 mb-4 text-slate-600'>{numberOfGroups} Grupo(s) Encontrado(s)</p>
         <div className='p-3 flex gap-15 flex-wrap justify-center'>
           {filteredDataGroups.length > 0 ? (
             filteredDataGroups.map(group => (

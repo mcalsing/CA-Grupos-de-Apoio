@@ -23,19 +23,18 @@ const initialGroupAddress: IAddressEN = {
   city: '',
   district: '',
   street: '',
+  stateUF: ''
 }
 
 function registerGroupForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [groupAddress, setGroupAddress] = useState<IAddressEN | null>(initialGroupAddress);
   const [cepInput, setCepInput] = useState('')
-  const [groupData, setGroupData] = useState<IUserData>(initialGroupData);
-  //const [payload, setPayload] = useState('')
+  const [groupData, setGroupData] = useState<IUserData>(initialGroupData);  
 
   const getCep = async (cep:string) => {
     try {
       const { data } = await axios.get<IAddress>(`https://viacep.com.br/ws/${cep}/json/`)
-      console.log(data)
       const { estado: state, uf: stateUF, localidade: city, bairro: district, logradouro: street} = data
       setGroupAddress({state, stateUF, city, district, street})
 
@@ -45,7 +44,6 @@ function registerGroupForm() {
   }
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("entrei no handleCepChange")
     const cleanedValue = e.target.value.replace(/\D/g, '');
     setCepInput(cleanedValue);
     
