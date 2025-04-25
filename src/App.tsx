@@ -60,17 +60,21 @@ function App() {
     getUniqueStates()
   }, [filteredDataGroups])
 
+  useEffect(() => {
+    handleGetGroups()
+  }, [])
+
   return (
     <main className='bg-slate-50 flex flex-col items-center'>
       <section className='max-w-[1440px]'>      
         <h1>Grupos de apoio</h1>
         <RegisterGroupForm />
-        <button
+{/*         <button
           className='bg-blue-600 cursor-pointer px-8 py-1 rounded-sm mt-3 text-white'
           onClick={handleGetGroups}
         >
           GET  
-        </button>
+        </button> */}
         <div className='flex text-white justify-center'>
           {uniqueStates.map((state, index) => {
             const isSelected = state === selectedState;
