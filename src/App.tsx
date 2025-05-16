@@ -2,6 +2,7 @@ import axios from 'axios'
 import './App.css'
 import { useEffect, useState } from 'react'
 import RegisterGroupForm from './components/registerGroupForm'
+import Header from './components/Header'
 import { IGroupData } from './interfaces/IGroupData'
 import { FaRegTrashAlt } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -20,8 +21,8 @@ function App() {
       const { data } = await axios.get<IGroupData[]>("https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups")
       setDataGroups(data)
       setFilteredDataGroups(data)
-    } catch (err) {
-      console.error("Algo deu errado!", err)
+    } catch (error) {
+      console.error("Algo deu errado!", error.messege)
     }
   }
 
@@ -35,21 +36,27 @@ function App() {
   }
 
   const handleDeleteGroup = async (currentId) => {
-    console.log(currentId)
     try {
       if (window.confirm('Tem certeza que deseja deletar o Grupo de Apoio?')) {
-        console.log('Action confirmed!');
-        console.log(dataGroups)
-  
+        console.log('Tentando deletar ID:', currentId);
+        
         const response = await axios.delete(`https://oz962m8g4e.execute-api.us-east-1.amazonaws.com/groups/${currentId}`)
         console.log(response)
-        setFilteredDataGroups(dataGroups.filter(group => group.groupId !== currentId ))
-      } else {
-        console.log('Action cancelled.');
+        
+        console.log('Resposta completa:', response);
+        
+        if (response.status === 200) {
+          setFilteredDataGroups(dataGroups.filter(group => group.groupId !== currentId));
+        }
       }
-
     } catch (error) {
-      console.error("Algo deu errado", error)
+      console.error("Detalhes do erro:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        config: error.config
+      });
     }
   }
 
@@ -71,7 +78,8 @@ function App() {
   }, [])
 
   return (
-    <main className='bg-slate-50 flex flex-col items-center'>
+    <main className='bg-slate-100 flex flex-col items-center'>
+      <Header/>
       <section className='max-w-[1440px] flex flex-col items-center'>      
         <RegisterGroupForm />
         <h1 className='text-center text-2xl text-slate-700 mb-3 mt-10'>Encontre um Grupo de Apoio!</h1>
@@ -96,9 +104,9 @@ function App() {
         <p className='text-center mt-2 mb-4 text-slate-600'>{numberOfGroups} Grupo(s) Encontrado(s)</p>
         <div className='p-3 flex gap-15 flex-wrap justify-center'>
           {isLoadingGroups ? (
-            <div className='flex flex-col items-center gap-5 text-slate-700'>
-              <p className='text-2xl'>Carregando Grupos</p>
-              <AiOutlineLoading3Quarters className='animate-spin text-3xl' />
+            <div className='flex text-3xl flex-col items-center gap-5 text-slate-700'>
+              <p>Carregando Grupos</p>
+              <AiOutlineLoading3Quarters className='animate-spin' />
             </div>
           ) : (
             filteredDataGroups.length > 0 ? (
